@@ -30,7 +30,8 @@ namespace practice_9
             int[] maxs = new int[g.GetLength(0)];
             int k;
             int[] countm = new int[g.GetLength(0)];
-            int[][] ind = new int[g.GetLength(0)][];
+            int ind1 = 0;
+            int ind2 = 0;
             for (int i = 0; i < g.GetLength(0); i++)
             {
                 k = g[i][0];
@@ -40,14 +41,15 @@ namespace practice_9
                     {
                         countm[i] += g[i][j];
                         k = g[i][j];
-                        ind[i] = new int[2] {i,j};  
+                        ind1 = i;
+                        ind2 = j;
                     }
                 }
                 countm[i] /= g[i].Length;
                 maxs[i] = k;
                 l[i] = g[i][g[i].Length - 1];
                 k = g[i][0];
-                g[i][0] = g[ind[i][0]][ind[i][1]];
+                g[i][0] = g[ind1][ind2];
             }
             
             Console.WriteLine($"Массив с последними элементами из каждой строки зубчатой матрицы: ");
@@ -60,15 +62,16 @@ namespace practice_9
             {
                 Console.Write($"{maxs[k]} ");
             }
-            Console.WriteLine("Измененная Матрица");
+            Console.WriteLine($"\nИзмененная Матрица");
             for (int i = 0; i < g.GetLength(0); i++)
             {
                 for( int j = 0; j < g[i].Length; j++)
                 {
                     Console.Write($"{g[i][j]} ");
                 }
+                Console.WriteLine($"\n");
             }
-            Console.WriteLine("Реверсный полученная матрица");
+            Console.WriteLine($"\nРеверсная полученная матрица");
             for (int i = 0; i < g.GetLength(0); i++)
             {
                 Array.Reverse(g[i]);
@@ -76,6 +79,7 @@ namespace practice_9
                 {
                     Console.Write($"{g[i][j]} ");
                 }
+                Console.WriteLine($"\n");
             }
             Console.WriteLine($"\nСреднее число в каждой строке");
             for (int i=0; i < g.GetLength(0); i++)
