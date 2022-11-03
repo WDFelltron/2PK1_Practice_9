@@ -5,47 +5,40 @@ namespace Practice_11
     {
         public static string checkonright(String word)
         {
-            /*
-             первая версия кода
-            byte R = 0;
-            string[] domen = new string[] {".com", ".ru", ".ua",".hiz"};
-            foreach(char c in word)
-            {
-                if(c == '@')
-                {
-                    R++;
-                }
-                else if(Char.IsPunctuation(c))
-                {
-                    if (c == '!'|| c =='-'||c =='_' || c == '.')
-                    {
-                        R++;
-                    }
-                    else { break;}
-                }
-                else if (Char.IsLetter(c)) { R++; }
-            }
-            for (int i = 0; i < domen.Length; i++) { if (word.EndsWith(domen[i])) { R++; } }
-            if (R == word.Length+1  ) word = "Correct Mail";
-            else word = "Error: Incorrect mail!";
-            */
-            byte R = 0; 
+            byte r = 0;
+            char[] vs = new char[word.Length];
+            for (int i = 0; i < word.Length; i++) vs[i] = (char)word[i];
             string[] parts = new string[3];
-            for(int i = 0; i < parts.Length; i++)
+            int g = 0;
+            for (int i = 0; i < vs.Length; i++)
             {
-                foreach(char j in word)
-                {
-                    if (j != '@') parts[i] += j;
-                    else { parts[i] += j; break; }
-                }
+                if (vs[i] != '@') parts[g] += vs[i].ToString();
+                else { parts[g + 1] = vs[i].ToString(); g += 2; }
             }
-                for (int j = 0; j < parts[0].Length; j++)
+            for (int j = 0; j < parts[0].Length; j++)
+            {
+                if (Char.IsDigit(parts[0][j]) || parts[0][j]>='a' && parts[0][j]<='z' || parts[0][j]>='A' && parts[0][j] <= 'Z'|| parts[0][j] == '!' || parts[0][j] == '-' || parts[0][j] == '_' || parts[0][j] == '.')
                 {
-                    if (Char.IsDigit(parts[0][j]) || parts[0][j]>='a' && parts[0][j]<='z' || parts[0][j]>='A' && parts[0][j] >= 'Z'|| parts[0][j] == '!' || parts[0][j] == '-' || parts[0][j] == '_' || parts[0][j] == '.')
-                    {
-                    R++;
-                    }
+                r++;
                 }
+                else word = "Error: Incorrect mail!";
+            }
+            if (parts[1] == "@") r++;
+            else word = "Error: Incorrect mail!";
+            for (int i = 0; i < parts[2].Length; i++)
+            {
+                if (parts[2][i] >= 'a' && parts[2][i] <= 'z' || parts[2][i] >= 'A' && parts[2][i] <= 'Z')
+                {
+                    r++;
+                }
+                else if (parts[2][i] == '.')
+                {
+                    r++;
+                }
+                else word = "Error: Incorrect mail!";
+            }
+            if (r == word.Length) word = "Correct mail";
+            else word = "Error: Incorrect mail!";
             return word;
         }
         public static void Main(String[] args)
