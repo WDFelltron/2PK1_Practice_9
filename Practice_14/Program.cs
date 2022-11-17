@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Practice_14
 {
     public class Program
@@ -37,25 +38,27 @@ namespace Practice_14
         }
         public static void specialzadanie4(int n) 
         {
-            if (Math.Abs(n) < 10)
+            string first = "";
+            char[] reverse = new char[(Convert.ToString(n)).Length];
+            if (Math.Abs(n) >= 10)
             {
-                Console.Write(n % 10);
-                specialzadanie4(n /= 10);
+                Console.Write(n%10);
+                specialzadanie4(n/=10);
             }
             else Console.Write(n);
         }
         public static void Main(string[] args)
         {
             byte con = 0;
-            Console.Write($"Выберите номер от 1 до 4, чтобы выбрать соответствующее задание для проверки\nВыбор: ");
-            while (con !=3)
+            while (con !=4)
             {
+                Console.Write($"Выберите номер от 1 до 4, чтобы выбрать соответствующее задание для проверки\nВыбор: ");
                 switch (Console.ReadLine())
                 {
+                     
                     default: 
-                        { 
-                            Console.WriteLine("В следующий раз, попробуйте выбрать существующий вариант задания"); 
-                            Console.Write($"Выберите номер от 1 до 5, чтобы выбрать соответствующее задание для проверки\nВыбор: "); 
+                        {
+                    Console.WriteLine("В следующий раз, попробуйте выбрать существующий вариант задания");
                             break; 
                         };
                     case "1": { 
@@ -63,8 +66,7 @@ namespace Practice_14
                             double a = 10;
                             Console.Write($"Введите количество шагов: ");
                             int n = Convert.ToInt32(Console.ReadLine());
-                            Console.Write($"итог:") ; zadanie1(a,n);
-                            ++con; 
+                            Console.Write($"итог:") ; zadanie1(a, n); 
                             break; 
                         }
                     case "2": 
@@ -74,7 +76,6 @@ namespace Practice_14
                             Console.Write($"Введите количество шагов: ");
                             int n = Convert.ToInt32(Console.ReadLine());
                             Console.Write($"итог:"); zadanie2(b, n);
-                            ++con; 
                             break; 
                         }
                     case "3":
@@ -83,17 +84,22 @@ namespace Practice_14
                             int a = 87, b = -87;
                             Console.WriteLine($"числа между {a} и {b} включительно:");
                             zadanie3(a, b);
-                            ++con;
                             break;
                         }
                     case "4": 
                         {
-                            Console.WriteLine("Введите число");
+                            Console.WriteLine("Спецзадание №4");
+                            Console.Write("Введите число:");
                             int n = Convert.ToInt32(Console.ReadLine());
                             specialzadanie4(n);
                             break; 
                         }
                 }
+                Console.Write($"\nПосмотреть другие?\nда-Y | нет-N\nВвод: ");
+                string answer = Console.ReadLine();
+                if (answer == "Y") con++;
+                else if(answer == "N") break;
+                else Console.WriteLine("Засчитаю как ответ 'да'");
             }
         }
     }
