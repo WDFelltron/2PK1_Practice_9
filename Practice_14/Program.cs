@@ -32,8 +32,8 @@ namespace Practice_14
         }
         public static void zadanie3(int a, int b)
         {
-            if (a < b) for (int i = a; i <= b; i++) Console.WriteLine(i);
-            else if (b < a) for (int i = a; i >= b; i--) Console.WriteLine(i);
+            if (a < b) for (int i = a; i <= b; i++) Console.Write($"{i} ");
+            else if (b < a) for (int i = a; i >= b; i--) Console.Write($"{i} ");
             else Console.WriteLine(a);
         }
         public static void specialzadanie4(int n) 
@@ -98,8 +98,8 @@ namespace Practice_14
                 Console.Write($"\nПосмотреть другие?\nда-Y | нет-N\nВвод: ");
                 string answer = Console.ReadLine();
                 if (answer == "Y") con++;
-                else if(answer == "N") break;
-                else Console.WriteLine("Засчитаю как ответ 'да'");
+                else if (answer == "N") break;
+                else { Console.WriteLine("Засчитаю как ответ 'да'"); con++; }
             }
         }
     }
