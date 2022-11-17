@@ -1,7 +1,8 @@
-﻿/*using System;
+﻿using System;
+
 namespace test
-{*/
-using System;
+{
+
 
 public class Program
     {
@@ -32,7 +33,7 @@ public class Program
             Console.WriteLine($"Площадь конуса будет равна {GetArea(l, r)} кубическим единицам \n");
             ArrayGeneration(Convert.ToInt32(Console.ReadLine()));
         }*/
-        public static void Main()
+        /*public static void Main()
         {
             string  txt = Console.ReadLine();
             NormalizeString(ref txt);
@@ -49,6 +50,20 @@ public class Program
                 Char.ToLower(chars[i]);
             }
             text = string.Join("", chars);
+        }*/
+        static void Invert()
+        {
+            char ch =Convert.ToChar(Console.Read());
+            if( ch != '.')
+            {
+                Invert();
+                Console.Write(ch);
+            }
+            
+        }
+        static void Main(string[] args)
+        {
+            Invert();
         }
     }
-//}
+}
