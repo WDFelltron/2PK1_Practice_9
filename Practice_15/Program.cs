@@ -29,7 +29,7 @@ namespace Practice_15
             string word = null;
             for(int i = 0; i < n; i++)
             {
-                word += (char)rnd.Next('a', 'z');
+                word += (char)rnd.Next('\u0000', '\uFFFF');
             }
             return word;
         }
