@@ -27,9 +27,15 @@ namespace Practice_9
         {
             string address = @"D:\myBook";
             FileStream file = new FileStream(address, FileMode.Append, FileAccess.Write);
-            using(StreamWriter w = new StreamWriter(file, Encoding.UTF8)) 
+            while (true)
             {
-                w.WriteLine(Corrector(Console.ReadLine()));
+                using (StreamWriter w = new StreamWriter(file, Encoding.UTF8))
+                {
+                    w.WriteLine(Corrector(Console.ReadLine()));
+                }
+                Console.WriteLine("Хотите продолжить делать новые записи?");
+                if (Console.ReadLine() == "N") { Console.WriteLine("Хорошего дня"); break; }
+                else { Console.WriteLine("Возобновляем алгоритм"); }
             }
         }
     }
