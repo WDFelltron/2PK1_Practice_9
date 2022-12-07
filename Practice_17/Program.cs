@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
@@ -10,11 +11,13 @@ namespace Practice_17
     public class program
     {
         static char[][] Map;
+        static int[] playerSpawn;
         static int HP = 30;
         static int power = 5;
         static int steps = 0;
+        static int Fightcount = 10;
         static string save = @"Save.txt";
-        static char[] elements = new char[4] { '♥', 'P', '☻', '♦' };
+        static char[] elements = new char[4] { '♥', '☻', '♦', ' ' };
         public static void Main(string[] args)
         {
             while (true)
@@ -22,16 +25,17 @@ namespace Practice_17
                 Console.Clear();
                 Console.Write("Загрузить сохранение или начать новую игру?\nНажмите L, чтобы загрузить сохранение\nНажмите N, чтобы начать новую игру\n");
                 ConsoleKey answer = Console.ReadKey(true).Key;
-                if/*(Console.ReadLine()=="N")*/ (answer == ConsoleKey.N)
+                if(answer == ConsoleKey.N)
                 {
                     Map = generateEverything(GenerateMap());
                     break;
                 }
-                else if/*(Console.ReadLine()=="L")*/ (answer == ConsoleKey.L)
+                else if(answer == ConsoleKey.L)
                 {
                     if (File.Exists(save))
                     {
-                        Map = Loadstate(GenerateMap());
+                        Map = Loadstate();
+                        break;
                     }
                     else
                     {
@@ -42,9 +46,10 @@ namespace Practice_17
             }
 
             ConsoleKey action = ConsoleKey.Spacebar;
-            while (action != ConsoleKey.Escape) {
+            while (action != ConsoleKey.Escape)
+            {
                 UpdateMap();
-                if (HP <= 0) break;
+                if (HP <= 0 || Fightcount == 0) break;
                 action = Console.ReadKey(true).Key;
                 if (action == ConsoleKey.S)
                 {
@@ -52,6 +57,7 @@ namespace Practice_17
                 }
                 Move(Map, action);
             }
+            Console.Clear();
             Console.WriteLine($"The end... Количество пройденных шагов:{steps}");
         }
         public static char[][] GenerateMap()
@@ -81,11 +87,12 @@ namespace Practice_17
                 }
 
             }
+            
             return map;
         }
         public static char[][] generateEverything(char[][] map){
             Random rnd = new Random();
-            map[(map.GetLength(0) - 1) / 2][(map[0].Length - 1) / 2] = 'P';//player's first place
+            playerSpawn = new int[2] { (map.GetLength(0)-1)/2, (map[0].Length-1)/2 };
             byte Enemycount = 0;
             int[] coordinates;
             while (Enemycount < 10)
@@ -119,53 +126,168 @@ namespace Practice_17
                 }
 
             }
+            byte bosscount = 0;
+            while (bosscount < 1)
+            {
+                coordinates = new int[2] { rnd.Next(1, map.GetLength(0) - 2), rnd.Next(1, map[0].Length - 2) };
+                if ((map[coordinates[0]][coordinates[1]] != 'P' || map[coordinates[0]][coordinates[1]] != '☻' || map[coordinates[0]][coordinates[1]] != '♥' || map[coordinates[0]][coordinates[1]] != '♦') && bosscount <= 1)
+                {
+                    map[coordinates[0]][coordinates[1]] = '☺';
+                    bosscount++;
+                }
+
+            }
+            byte portals = 0;
+            while (portals < 2)
+            {
+                coordinates = new int[2] { rnd.Next(1, map.GetLength(0) - 2), rnd.Next(1, map[0].Length - 2) };
+                if ((map[coordinates[0]][coordinates[1]] != 'P' || map[coordinates[0]][coordinates[1]] != '☻' || map[coordinates[0]][coordinates[1]] != '♥' || map[coordinates[0]][coordinates[1]] != '♦' || map[coordinates[0]][coordinates[1]] != '0' || map[coordinates[0]][coordinates[1]] != '0') && portals <= 2)
+                {
+                    map[coordinates[0]][coordinates[1]] = '0';
+                    portals++;
+                }
+            }
             return map;
         }
         public static void UpdateMap()
         {
             Console.Clear();
-            Console.WriteLine("ИСпользуйте кнопки стрелок для перемещения\nНажмите S для сохранения прогресса игры\nНажмите Esc для выхода из игры");
+            Console.WriteLine("Иcпользуйте кнопки стрелок для перемещения\nНажмите S для сохранения прогресса игры\nНажмите Esc для выхода из игры");
             for (int i = 0; i < Map.GetLength(0); i++)
             {
                 for (int j = 0; j < Map[i].Length; j++)
                 {
-                    switch (Map[i][j])
+                    if (i == playerSpawn[0] && j == playerSpawn[1])
                     {
-                        default: {
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.Write(Map[i][j]);
-                                break;
-                            }
-                        case '♥': {
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.Write(Map[i][j]);
-                                break;
-                            };
-                        case 'P': {
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Blue;
-                                Console.Write(Map[i][j]);
-                                break; 
-                            };
-                        case '☻': {
-                                Console.BackgroundColor= ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.Write(Map[i][j]);
-                                break; 
-                            };
-                        case '█': {
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.Write(Map[i][j]);
-                                break; 
-                            };
-                        case '♦': {
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.Write(Map[i][j]);
-                                break;
-                            };
+                        Console.ForegroundColor= ConsoleColor.White;
+                        if (i % 2 == 0)
+                        {
+                            if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                            else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        }
+                        else
+                        {
+                            if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                            else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        }
+                        Console.Write('P');
+                    }
+                    else
+                    {
+                        switch (Map[i][j])
+                        {
+                            default:
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                }
+                            case '♥':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                            case '☻':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                            case '█':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.ForegroundColor = ConsoleColor.Magenta;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                            case '♦':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                            case '☺':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.ForegroundColor = ConsoleColor.Red;
+                                        else Console.ForegroundColor = ConsoleColor.DarkRed;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.ForegroundColor = ConsoleColor.Red;
+                                        else Console.ForegroundColor = ConsoleColor.DarkRed;
+                                    }
+                                    Console.BackgroundColor = ConsoleColor.Black;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                            case '0':
+                                {
+                                    if (i % 2 == 0)
+                                    {
+                                        if (j % 2 == 0) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    else
+                                    {
+                                        if (j % 2 == 1) Console.BackgroundColor = ConsoleColor.DarkCyan;
+                                        else Console.BackgroundColor = ConsoleColor.DarkBlue;
+                                    }
+                                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                                    Console.Write(Map[i][j]);
+                                    break;
+                                };
+                        }
                     }
                 }
                 Console.BackgroundColor = ConsoleColor.Black;
@@ -177,118 +299,76 @@ namespace Practice_17
         }
         public static char[][] Move(char[][] space, ConsoleKey direction)
         {
-            ConsoleKey[] actions= new ConsoleKey[4] {ConsoleKey.UpArrow, ConsoleKey.LeftArrow, ConsoleKey.DownArrow, ConsoleKey.RightArrow};
-            //int[] playerPlace = new int[2];
-            for(int i=0; i < space.GetLength(0); i++)
+            switch (direction)
             {
-                for(int j=0; j < space[i].Length; j++)
-                {
-                    if (space[i][j] == 'P')
+                case ConsoleKey.UpArrow:
                     {
-                        
-                        if((direction == actions[0]) && space[i - 1][j] != '█')
+                        if (space[playerSpawn[0]-1][playerSpawn[1]] != '█')
                         {
-                            if (space[i - 1][j] == '♥') {
-                                Healing();
-                                space[i][j] = ' ';
-                                space[i - 1][j] = 'P';
-                            }
-                            else if (space[i - 1][j] == '☻') {
-                                Fight();
-                                space[i][j] = ' ';
-                                space[i - 1][j] = 'P';
-                            }
-                            else if (space[i - 1][j] == '♦') {
-                                Buff();
-                                space[i][j] = ' ';
-                                space[i - 1][j] = 'P';
-                            }
-                            else if(space[i - 1][j] == ' ') {
-                                space[i][j] = ' ';
-                                space[i - 1][j] = 'P';
-                            }
+                            action(playerSpawn[0] - 1, playerSpawn[1]);
+                            playerSpawn[0]--;
                             steps++;
-                            Thread.Sleep(1);
-                        }
-                        else if ((direction == actions[1]) && space[i][j-1] != '█')
-                        {
-                            if (space[i][j - 1] == '♥') {
-                                Healing();
-                                space[i][j] = ' ';
-                                space[i][j - 1] = 'P';
-                            }
-                            else if (space[i][j - 1] == '☻') {
-                                Fight();
-                                space[i][j] = ' ';
-                                space[i][j - 1] = 'P';
-                            }
-                            else if (space[i][j - 1] == '♦')
-                            {
-                                Buff();
-                                space[i][j] = ' ';
-                                space[i][j - 1] = 'P';
-                            }
-                            else if (space[i][j - 1] == ' ') {
-                                space[i][j] = ' ';
-                                space[i][j-1] = 'P';
-                            }
-                            steps++;
-                            Thread.Sleep(1);
-                        }
-                        else if ((direction == actions[2]) && space[i + 1][j] != '█')
-                        {
-                            if (space[i + 1][j] == '♥') {
-                                Healing();
-                                space[i][j] = ' ';
-                                space[i + 1][j] = 'P';
-                            }
-                            else if (space[i + 1][j] == '☻') {
-                                Fight();
-                                space[i][j] = ' ';
-                                space[i + 1][j] = 'P';
-                            }
-                            else if (space[i + 1][j] == '♦') {
-                                Buff();
-                                space[i][j] = ' ';
-                                space[i + 1][j] = 'P';
-                            }
-                            else if (space[i + 1][j] == ' ') {
-                                space[i][j] = ' ';
-                                space[i+1][j] = 'P';
-                            }
-                            Thread.Sleep(1);
-                            steps++;
-                        }
-                        else if ((direction == actions[3]) && space[i][j + 1] != '█')
-                        {
-                            if (space[i][j + 1] == '♥') {
-                                Healing();
-                                space[i][j] = ' ';
-                                space[i][j + 1] = 'P';
-                            }
-                            else if (space[i][j + 1] == '☻') { 
-                                Fight();
-                                space[i][j] = ' ';
-                                space[i][j + 1] = 'P';
-                            }
-                            else if (space[i][j+1] == '♦') {
-                                Buff();
-                                space[i][j] = ' ';
-                                space[i][j + 1] = 'P';
-                            }
-                            else if (space[i][j+1] == ' ') {
-                                space[i][j] = ' ';
-                                space[i][j + 1] = 'P';
-                            }
-                            steps++;
-                            Thread.Sleep(1);
                         }
                         break;
-                        
                     }
-                }
+                case ConsoleKey.LeftArrow:
+                    {
+                        if (space[playerSpawn[0]][playerSpawn[1]-1] != '█')
+                        {
+                            action(playerSpawn[0], playerSpawn[1] - 1);
+                            playerSpawn[1]--;
+                            steps++;
+                        }
+                        break;
+                    }
+                case ConsoleKey.DownArrow:
+                    {
+                        if (space[playerSpawn[0]+1][playerSpawn[1]] != '█')
+                        {
+                            action(playerSpawn[0] + 1, playerSpawn[1]);
+                            playerSpawn[0]++;
+                            steps++;
+                        }
+                        break;
+                    }
+                case ConsoleKey.RightArrow:
+                    {
+                        if (space[playerSpawn[0]][playerSpawn[1]+1] != '█')
+                        { 
+                            action(playerSpawn[0], playerSpawn[1]+1);
+                            playerSpawn[1]++;
+                            steps++;
+                        }
+                        break;
+                    }
             }
             return space;
+        }
+        public static void action(int a, int b)
+        {
+            if ('♥' == Map[a][b]) { 
+                Healing();
+                Map[a][b] = ' ';
+            }
+            else if ('☻' == Map[a][b])
+            {
+                Fight();
+                Map[a][b] = ' ';
+            }
+            else if ('♦' == Map[a][b]) { 
+                Buff();
+                Map[a][b] = ' ';
+            }
+            else if ('☺' == Map[a][b])
+            {
+                Fight();
+                Fight();
+                Map[a][b] = ' ';
+            }
+            else if('0' == Map[a][b])
+            {
+                Teleport(a,b);
+            }
         }
         public static void Fight()
         {
@@ -298,6 +378,7 @@ namespace Practice_17
                 HP -= EnemyPower;
                 EnemyHP -= power;
             }
+            Fightcount -= 1;
         }
         public static void Healing()
         {
@@ -314,112 +395,97 @@ namespace Practice_17
         {
             power += 3;
         }
+        public static void Teleport(int a, int b)
+        {
+            Random rnd = new Random();
+            for(int i=0; i < Map.GetLength(0); i++)
+            {
+                for(int j=0; j< Map[i].Length; j++)
+                {
+                    if (i!=a && j!=b && Map[i][j] =='0')
+                    {
+                        playerSpawn = new int[2] {i, j};
+                    }
+                }
+            }
+        }
         public static void Savestate()
         {
             FileStream file = new FileStream(save, FileMode.Create, FileAccess.ReadWrite);
             using (StreamWriter writer = new StreamWriter(file))
-            {
-                foreach (char elem in elements)
-                {
+            { 
                     for (int i = 0; i < Map.GetLength(0); i++)
                     {
-                        for (int j = 0; j < Map[i].Length; j++)
-                        {
-                            if (elem == Map[i][j])
-                            {
-                                writer.Write($"{i} {j} ");
-                            }
-                        }
+                        writer.WriteLine(new string(Map[i]));
                     }
-                    writer.Write('\n');
-                }
-                writer.Write($"{HP}\n{power}\n{steps}");
+                writer.Write($"{HP}\n{power}\n{steps}\n{Fightcount}\n{playerSpawn[0]} {playerSpawn[1]}");
             }
-            
         }
-        public static char[][] Loadstate(char[][] map) {
+        public static char[][] Loadstate() {
+            char[][] map = GenerateMap();
             FileStream file = new FileStream(save, FileMode.Open, FileAccess.Read);
-            int[][][] coordinaty = new int[elements.Length][][];
-            string[] lines = new string[elements.Length];
-            char[][] linesParts = new char[elements.Length][];
-            for(int i=0; i<lines.Length;i++)
+            string code;
+            using(StreamReader reader = new StreamReader(file))
             {
-                using(StreamReader reader = new StreamReader(save))
-                {
-                    lines[i] = reader.ReadLine();
-                }
+                code=reader.ReadToEnd();
             }
-            for(int i=0; i < linesParts.Length; i++)
+            for(int i =0; i < map.GetLength(0);i++)
             {
-                linesParts[i]= new char[linesParts.Length];
-                for (int j = 0; j < linesParts.Length; j++)
+                for (int j = 0; j < map[i].Length; j++)
                 {
-                    linesParts[i][j] = lines[i][j];
-                }
-            }
-            for(int i=0; i < coordinaty.GetLength(0); i++)
-            {
-                coordinaty[i] = new int[linesParts[i].Length][];
-                for (int j = 0; j < coordinaty[i].GetLength(0); j++)
-                {
-                    int w = 0;
-                    int d = 0;
-                    coordinaty[i][j] = new int[linesParts[i].Length];
-                    int[] place = new int[2];
-                    string x = "";
-                    for(int t = 0; t < linesParts[i].Length; t++)
-                    {
-                        if (linesParts[i][t] != ' ')
-                        {
-                            x += linesParts[i][t];
-                            w++;
-                        }
-                        else if (w % 3 == 2)
-                        {
-                            coordinaty[i][d] = place;
-                            place = new int[2];
-                            w++;
-                            d++;
-                        }
-                        else {
-                            place[w % 2] = Convert.ToInt32(x);
-                            w++;
-                        }
+                    if (code[(i + 1) * j] != '\n') { 
+                        map[i][j] = code[(i + 1) * j];
+                    code.Remove((i + 1) * j);
+                    }
+                    else {
+                        code.Remove((i + 1) * j);
+                        --j;
                     }
                 }
-            }
-            for (int i = 0; i < coordinaty[0].GetLength(0); i++) {
-                if (coordinaty[0][i][0] != null && coordinaty[0][i][1] != null)
+                string coord = "";
+                int count=0;
+                while (code != "")
                 {
-                    Map[coordinaty[0][i][0]][coordinaty[0][i][1]] = '♥';
+                    foreach (char symb in code)
+                    {
+                        if (Char.IsDigit(symb))
+                        {
+                            coord += symb;
+                            code.Remove(symb, 1);
+                        }
+                        if (symb == '\n')
+                        {
+                            code.Remove(symb, 1);
+                            break;
+                        }
+                    }
+                    switch (count){
+                        case (0): {
+                                HP = Convert.ToInt32(coord);
+                                break;
+                            }
+                        case (1): {
+                                power = Convert.ToInt32(coord);
+                                break; 
+                            }
+                        case (2): {
+                                steps = Convert.ToInt32(coord);
+                                break; 
+                            }
+                        case (3): {
+                                string[] place = coord.Split(' ');
+                                for(int w = 0; w < place.Length; w++)
+                                {
+                                    playerSpawn[w] = Convert.ToInt32(place[w]);
+                                }
+                                break;
+                            }
+                    }
+                    coord = "";
+                    count++;
                 }
-                else break;
             }
-            for (int i = 0; i < coordinaty[1].GetLength(0); i++) {
-                if (coordinaty[1][i][0] != null && coordinaty[1][i][1] != null)
-                {
-                    Map[coordinaty[1][i][0]][coordinaty[0][i][1]] = 'P';
-                }
-                else break;
-            }
-            for (int i = 0; i < coordinaty[2].GetLength(0); i++) {
-                if (coordinaty[1][i][0] != null && coordinaty[1][i][1] != null)
-                {
-                    Map[coordinaty[2][i][0]][coordinaty[0][i][1]] = '☻';
-                }
-                else break;
-            }
-            for (int i = 0; i < coordinaty[3].GetLength(0); i++) {
-                if (coordinaty[1][i][0] != null && coordinaty[1][i][1] != null)
-                {
-                    Map[coordinaty[0][i][0]][coordinaty[0][i][1]] = '♦';
-                }
-                else break;
-            }
-            HP = Convert.ToInt32(lines[4]);
-            power = Convert.ToInt32(lines[5]);
-            steps = Convert.ToInt32(lines[6]);
-            return map ;
+            return map;
         }
     }
 }
@@ -429,4 +495,5 @@ namespace Practice_17
  * "☻" - враг
  * "█" - граница карты
  * "♦" - бонусы
+ * "☺" - Босс, имеет силу двух врагов
  */
