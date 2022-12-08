@@ -15,9 +15,10 @@ namespace Practice_17
         static int HP = 30;
         static int power = 5;
         static int steps = 0;
-        static int Fightcount = 10;
+        static int Fightcount = 11;
         static string save = @"Save.txt";
         static char[] elements = new char[4] { '♥', '☻', '♦', ' ' };
+        static int powertime;
         public static void Main(string[] args)
         {
             while (true)
@@ -76,7 +77,6 @@ namespace Practice_17
                     {
                         map[i][j] = '█';
                     }
-
                 }
                 else
                 {
@@ -85,9 +85,7 @@ namespace Practice_17
                     map[i][0] = '█';
                     map[i][map[i].Length - 1] = '█';
                 }
-
             }
-            
             return map;
         }
         public static char[][] generateEverything(char[][] map){
@@ -103,7 +101,6 @@ namespace Practice_17
                     map[coordinates[0]][coordinates[1]] = '☻';
                     Enemycount++;
                 }
-
             }
             byte healingstuffcount = 0;
             while (healingstuffcount < 5)
@@ -294,8 +291,13 @@ namespace Practice_17
                 Console.Write("\n");
             }
             Console.BackgroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"HP - {HP}/30 | Power - {power}");
+            if (powertime == 0)
+            {
+                Console.WriteLine($"HP - {HP}/30 | Power - {power}\nКоличество шагов - {steps}");
+            }
+            else Console.WriteLine($"HP {HP}/30 | Power {power} ^ {powertime}\nКоличество шагов - {steps}"); ;
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
         }
         public static char[][] Move(char[][] space, ConsoleKey direction)
         {
@@ -341,6 +343,11 @@ namespace Practice_17
                         }
                         break;
                     }
+            }
+            if(powertime > 0)
+            {
+                powertime--;
+                if(powertime == 0) power -= 2;
             }
             return space;
         }
@@ -393,7 +400,8 @@ namespace Practice_17
         }
         public static void Buff()
         {
-            power += 3;
+            powertime += 10;
+            power += 5;
         }
         public static void Teleport(int a, int b)
         {
@@ -418,73 +426,35 @@ namespace Practice_17
                     {
                         writer.WriteLine(new string(Map[i]));
                     }
-                writer.Write($"{HP}\n{power}\n{steps}\n{Fightcount}\n{playerSpawn[0]} {playerSpawn[1]}");
+                writer.Write($"{HP}\n{power}\n{steps}\n{Fightcount}\n{powertime}\n{playerSpawn[0]}\n{playerSpawn[1]}");
             }
         }
         public static char[][] Loadstate() {
             char[][] map = GenerateMap();
             FileStream file = new FileStream(save, FileMode.Open, FileAccess.Read);
-            string code;
+            string[] code = new string[map.GetLength(0)];
+            string[] stats = new string[7];
             using(StreamReader reader = new StreamReader(file))
             {
-                code=reader.ReadToEnd();
+                //сделать цикл построчно
+                /*считывать каждую строку через reader.ReadLine(). эта строка преобразуется в символьный массив (ToCharArray) 
+                 * записываешь симв массив в строку карты*/
+                for (int i = 0; i < code.Length; i++)code[i] = reader.ReadLine();
+                for (int i = 0; i < stats.Length; i++) stats[i] = reader.ReadLine();
             }
-            for(int i =0; i < map.GetLength(0);i++)
+            for(int i = 0; i < code.Length; i++)
             {
-                for (int j = 0; j < map[i].Length; j++)
+                for(int j = 0; j < code[i].Length; j++)
                 {
-                    if (code[(i + 1) * j] != '\n') { 
-                        map[i][j] = code[(i + 1) * j];
-                    code.Remove((i + 1) * j);
-                    }
-                    else {
-                        code.Remove((i + 1) * j);
-                        --j;
-                    }
-                }
-                string coord = "";
-                int count=0;
-                while (code != "")
-                {
-                    foreach (char symb in code)
-                    {
-                        if (Char.IsDigit(symb))
-                        {
-                            coord += symb;
-                            code.Remove(symb, 1);
-                        }
-                        if (symb == '\n')
-                        {
-                            code.Remove(symb, 1);
-                            break;
-                        }
-                    }
-                    switch (count){
-                        case (0): {
-                                HP = Convert.ToInt32(coord);
-                                break;
-                            }
-                        case (1): {
-                                power = Convert.ToInt32(coord);
-                                break; 
-                            }
-                        case (2): {
-                                steps = Convert.ToInt32(coord);
-                                break; 
-                            }
-                        case (3): {
-                                string[] place = coord.Split(' ');
-                                for(int w = 0; w < place.Length; w++)
-                                {
-                                    playerSpawn[w] = Convert.ToInt32(place[w]);
-                                }
-                                break;
-                            }
-                    }
-                    coord = "";
-                    count++;
+                    map[i][j] = code[i][j];
                 }
             }
+            HP = Convert.ToInt32(stats[0]);
+            power = Convert.ToInt32(stats[1]);
+            steps = Convert.ToInt32(stats[2]);
+            Fightcount = Convert.ToInt32(stats[3]);
+            powertime = Convert.ToInt32(stats[4]);
+            playerSpawn= new int[2] { Convert.ToInt32(stats[5]), Convert.ToInt32(stats[6])};
             return map;
         }
     }
