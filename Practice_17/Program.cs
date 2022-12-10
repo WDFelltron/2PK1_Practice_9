@@ -17,7 +17,6 @@ namespace Practice_17
         static int steps = 0;
         static int Fightcount = 11;
         static string save = @"Save.txt";
-        static char[] elements = new char[4] { '♥', '☻', '♦', ' ' };
         static int powertime;
         public static void Main(string[] args)
         {
@@ -436,9 +435,6 @@ namespace Practice_17
             string[] stats = new string[7];
             using(StreamReader reader = new StreamReader(file))
             {
-                //сделать цикл построчно
-                /*считывать каждую строку через reader.ReadLine(). эта строка преобразуется в символьный массив (ToCharArray) 
-                 * записываешь симв массив в строку карты*/
                 for (int i = 0; i < code.Length; i++)code[i] = reader.ReadLine();
                 for (int i = 0; i < stats.Length; i++) stats[i] = reader.ReadLine();
             }

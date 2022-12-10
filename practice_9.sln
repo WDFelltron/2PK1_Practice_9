@@ -23,9 +23,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice_14", "Practice_14\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice_15", "Practice_15\Practice_15.csproj", "{0484F90C-C5B1-4C78-91D6-75F536735838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_16", "Practice_16\Practice_16.csproj", "{6C250ADD-0CCD-408E-A3CD-6A5527CA273F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice_16", "Practice_16\Practice_16.csproj", "{6C250ADD-0CCD-408E-A3CD-6A5527CA273F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_17", "Practice_17\Practice_17.csproj", "{FD4A90BC-270C-4456-9FAE-3E50346F371F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice_17", "Practice_17\Practice_17.csproj", "{FD4A90BC-270C-4456-9FAE-3E50346F371F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice 17 Работа с указателями", "Practice 17 Работа с указателями\Practice 17 Работа с указателями.csproj", "{E58CE1EE-092A-41EE-88C1-4214DA5A7E4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Practice_8", "..\Practice_8\Practice_8\Practice_8.csproj", "{509D7D44-715E-49B8-911B-607507F3046D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_5", "Practice_5\Practice_5.csproj", "{9DA349C9-DFC5-4FCD-A834-13A54FCA06B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_7", "Practice_7\Practice_7.csproj", "{E188AA62-54CE-48BE-86FB-69EE77E02342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Practice_6", "Practice_6\Practice_6.csproj", "{7CE1F749-0ED3-4EC6-AF83-9ED27C2F9A18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +91,26 @@ Global
 		{FD4A90BC-270C-4456-9FAE-3E50346F371F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD4A90BC-270C-4456-9FAE-3E50346F371F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD4A90BC-270C-4456-9FAE-3E50346F371F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58CE1EE-092A-41EE-88C1-4214DA5A7E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58CE1EE-092A-41EE-88C1-4214DA5A7E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58CE1EE-092A-41EE-88C1-4214DA5A7E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58CE1EE-092A-41EE-88C1-4214DA5A7E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509D7D44-715E-49B8-911B-607507F3046D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509D7D44-715E-49B8-911B-607507F3046D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509D7D44-715E-49B8-911B-607507F3046D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509D7D44-715E-49B8-911B-607507F3046D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA349C9-DFC5-4FCD-A834-13A54FCA06B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA349C9-DFC5-4FCD-A834-13A54FCA06B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA349C9-DFC5-4FCD-A834-13A54FCA06B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA349C9-DFC5-4FCD-A834-13A54FCA06B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E188AA62-54CE-48BE-86FB-69EE77E02342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E188AA62-54CE-48BE-86FB-69EE77E02342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E188AA62-54CE-48BE-86FB-69EE77E02342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E188AA62-54CE-48BE-86FB-69EE77E02342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CE1F749-0ED3-4EC6-AF83-9ED27C2F9A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CE1F749-0ED3-4EC6-AF83-9ED27C2F9A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CE1F749-0ED3-4EC6-AF83-9ED27C2F9A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CE1F749-0ED3-4EC6-AF83-9ED27C2F9A18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
